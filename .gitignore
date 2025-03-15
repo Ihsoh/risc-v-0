@@ -1,0 +1,9 @@
+/.vscode
+
+/prj
+
+!/sim
+/sim/*
+!/sim/tb
+
+/tool/*.exe
