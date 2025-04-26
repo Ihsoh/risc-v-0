@@ -30,10 +30,25 @@ module InsExec(
     output  reg [31:0]      mem_w_mem_val
 );
 
-    // RV32I R-type
+    // InsExec_RV32I_R
     wire            rv32i_r_reg_w_op;
     wire [4:0]      rv32i_r_reg_w_reg_idx;
     wire [31:0]     rv32i_r_reg_w_reg_val;
+
+    // InsExec_RV32I_I_Comp
+    wire            rv32i_i_comp_reg_w_op;
+    wire [4:0]      rv32i_i_comp_reg_w_reg_idx;
+    wire [31:0]     rv32i_i_comp_reg_w_reg_val;
+
+    // InsExec_RV32I_I_Ld
+    wire            rv32i_i_ld_reg_w_op;
+    wire [4:0]      rv32i_i_ld_reg_w_reg_idx;
+    wire [31:0]     rv32i_i_ld_reg_w_reg_val;
+
+    // InsExec_RV32I_S
+    wire            rv32i_s_mem_w_op;
+    wire [31:0]     rv32i_s_mem_w_mem_addr;
+    wire [31:0]     rv32i_s_mem_w_mem_val;
 
     always @(negedge sys_clk) begin
         if (op == 1'b1
@@ -45,6 +60,36 @@ module InsExec(
             mem_w_op <= 1'd0;
             mem_w_mem_addr <= 32'd0;
             mem_w_mem_val <= 32'd0;
+        end
+        else if (op == 1'b1
+                && ins_dec_op == 7'b0010011) begin
+            reg_w_op <= rv32i_i_comp_reg_w_op;
+            reg_w_reg_idx <= rv32i_i_comp_reg_w_reg_idx;
+            reg_w_reg_val <= rv32i_i_comp_reg_w_reg_val;
+
+            mem_w_op <= 1'd0;
+            mem_w_mem_addr <= 32'd0;
+            mem_w_mem_val <= 32'd0;
+        end
+        else if (op == 1'b1
+                && ins_dec_op == 7'b0000011) begin
+            reg_w_op <= rv32i_i_ld_reg_w_op;
+            reg_w_reg_idx <= rv32i_i_ld_reg_w_reg_idx;
+            reg_w_reg_val <= rv32i_i_ld_reg_w_reg_val;
+
+            mem_w_op <= 1'd0;
+            mem_w_mem_addr <= 32'd0;
+            mem_w_mem_val <= 32'd0;
+        end
+        else if (op == 1'b1
+                && ins_dec_op == 7'b0100011) begin
+            reg_w_op <= 1'd0;
+            reg_w_reg_idx <= 5'd0;
+            reg_w_reg_val <= 32'd0;
+
+            mem_w_op <= rv32i_s_mem_w_op;
+            mem_w_mem_addr <= rv32i_s_mem_w_mem_addr;
+            mem_w_mem_val <= rv32i_s_mem_w_mem_val;
         end
         else begin
             reg_w_op <= 1'd0;
@@ -87,9 +132,43 @@ module InsExec(
 
         .reg_rd(reg_rd),
 
-        .reg_w_op(rv32i_r_reg_w_op),
-        .reg_w_reg_idx(rv32i_r_reg_w_reg_idx),
-        .reg_w_reg_val(rv32i_r_reg_w_reg_val)
+        .reg_w_op(rv32i_i_comp_reg_w_op),
+        .reg_w_reg_idx(rv32i_i_comp_reg_w_reg_idx),
+        .reg_w_reg_val(rv32i_i_comp_reg_w_reg_val)
+    );
+
+    InsExec_RV32I_I_Ld u_ins_exec_rv32i_i_ld(
+        .op(op),
+
+        .ins_dec_op(ins_dec_op),
+        .ins_dec_funct3(ins_dec_funct3),
+
+        .mem_val(mem_r_val),
+
+        .reg_rd(reg_rd),
+
+        .reg_w_op(rv32i_i_ld_reg_w_op),
+        .reg_w_reg_idx(rv32i_i_ld_reg_w_reg_idx),
+        .reg_w_reg_val(rv32i_i_ld_reg_w_reg_val)
+    );
+
+    InsExec_RV32I_S u_ins_exec_rv32i_s(
+        .op(op),
+        
+        .ins_dec_op(ins_dec_op),
+        .ins_dec_funct3(ins_dec_funct3),
+
+        .reg_rs1_val(reg_rs1_val),
+        .reg_rs2_val(reg_rs2_val),
+
+        .imm_ext_ext(imm_ext_type),
+        .imm_ext_type(imm_ext_ext),
+
+        .mem_r_val(mem_r_val),
+        
+        .mem_w_op(rv32i_s_mem_w_op),
+        .mem_w_mem_addr(rv32i_s_mem_w_mem_addr),
+        .mem_w_mem_val(rv32i_s_mem_w_mem_val)
     );
 
 endmodule

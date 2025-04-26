@@ -34,16 +34,71 @@ module InsExec_RV32I_R(
                 // ADD
                 reg_w_op <= 1'b1;
                 reg_w_reg_idx <= reg_rd;
-                reg_w_reg_val <= reg_rs1_val + reg_rs2_val;
+                reg_w_reg_val <= $signed(reg_rs1_val) + $signed(reg_rs2_val);
             end
             else if (ins_dec_funct3 == 3'h0
                     && ins_dec_funct7 == 7'h20) begin
                 // SUB
                 reg_w_op <= 1'b1;
                 reg_w_reg_idx <= reg_rd;
-                reg_w_reg_val <= reg_rs1_val - reg_rs2_val;
+                reg_w_reg_val <= $signed(reg_rs1_val) - $signed(reg_rs2_val);
             end
-            // ...............
+            else if (ins_dec_funct3 == 3'h4
+                    && ins_dec_funct7 == 7'h0) begin
+                // XOR
+                reg_w_op <= 1'b1;
+                reg_w_reg_idx <= reg_rd;
+                reg_w_reg_val <= reg_rs1_val ^ reg_rs2_val;
+            end
+            else if (ins_dec_funct3 == 3'h6
+                    && ins_dec_funct7 == 7'h0) begin
+                // OR
+                reg_w_op <= 1'b1;
+                reg_w_reg_idx <= reg_rd;
+                reg_w_reg_val <= reg_rs1_val | reg_rs2_val;
+            end
+            else if (ins_dec_funct3 == 3'h7
+                    && ins_dec_funct7 == 7'h0) begin
+                // AND
+                reg_w_op <= 1'b1;
+                reg_w_reg_idx <= reg_rd;
+                reg_w_reg_val <= reg_rs1_val & reg_rs2_val;
+            end
+            else if (ins_dec_funct3 == 3'h1
+                    && ins_dec_funct7 == 7'h0) begin
+                // SLL
+                reg_w_op <= 1'b1;
+                reg_w_reg_idx <= reg_rd;
+                reg_w_reg_val <= reg_rs1_val << reg_rs2_val;
+            end
+            else if (ins_dec_funct3 == 3'h5
+                    && ins_dec_funct7 == 7'h0) begin
+                // SRL
+                reg_w_op <= 1'b1;
+                reg_w_reg_idx <= reg_rd;
+                reg_w_reg_val <= reg_rs1_val >> reg_rs2_val;
+            end
+            else if (ins_dec_funct3 == 3'h5
+                    && ins_dec_funct7 == 7'h20) begin
+                // SRA
+                reg_w_op <= 1'b1;
+                reg_w_reg_idx <= reg_rd;
+                reg_w_reg_val <= reg_rs1_val >>> reg_rs2_val;
+            end
+            else if (ins_dec_funct3 == 3'h2
+                    && ins_dec_funct7 == 7'h0) begin
+                // SLT
+                reg_w_op <= 1'b1;
+                reg_w_reg_idx <= reg_rd;
+                reg_w_reg_val <= ($signed(reg_rs1_val) < $signed(reg_rs2_val)) ? 32'd1 : 32'd0;
+            end
+            else if (ins_dec_funct3 == 3'h3
+                    && ins_dec_funct7 == 7'h0) begin
+                // SLTU
+                reg_w_op <= 1'b1;
+                reg_w_reg_idx <= reg_rd;
+                reg_w_reg_val <= (reg_rs1_val < reg_rs2_val) ? 32'd1 : 32'd0;
+            end
             else begin
                 reg_w_op <= 1'b0;
                 reg_w_reg_idx <= reg_rd;

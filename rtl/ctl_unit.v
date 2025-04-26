@@ -551,7 +551,8 @@ module CtlUnit(
             st_done_mem_r <= 1'd0;
         end
         else if (status == STATUS_MEM_R) begin 
-            if (ins_dec_op == 7'b0000011) begin
+            if (ins_dec_op == 7'b0000011
+                    || ins_dec_op == 7'b0100011) begin
                 if (st_done_mem_r_0 == 1'b0) begin
                     mem_r_addr <= reg_r_rs1 + ins_dec_imm;
 
