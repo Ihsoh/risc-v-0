@@ -183,6 +183,9 @@ module CtlUnit(
     reg [MMU_ADDR_WIDTH - 1:0]      mem_w_mem_addr;
     reg [MMU_DATA_WIDTH - 1:0]      mem_w_mem_val;
 
+    // PC递增
+    reg                             reg_pc_w_op;
+    reg [31:0]                      reg_pc_w_val;
 
 
 
@@ -610,6 +613,9 @@ module CtlUnit(
             mem_w_mem_addr <= 32'd0;
             mem_w_mem_val <= 32'h0;
 
+            reg_pc_w_op <= 1'b0;
+            reg_pc_w_val <= 32'd0;
+
             st_done_exec_0 <= 1'd0;
             st_done_exec_1 <= 1'd0;
             st_done_exec <= 1'd0;
@@ -624,6 +630,9 @@ module CtlUnit(
             mem_w_op <= ins_exec_mem_w_op;
             mem_w_mem_addr <= ins_exec_mem_w_mem_addr;
             mem_w_mem_val <= ins_exec_mem_w_mem_val;
+
+            reg_pc_w_op <= ins_exec_reg_pc_w_op;
+            reg_pc_w_val <= ins_exec_reg_pc_w_val;
             
             st_done_exec_0 <= 1'd1;
             st_done_exec_1 <= st_done_exec_0;
@@ -632,13 +641,30 @@ module CtlUnit(
         else begin
             ins_exec_op <= 1'b0;
 
-            reg_w_op <= 1'b0;
-            reg_w_reg_idx <= 5'd0;
-            reg_w_reg_val <= 32'd0;
+            if (st_done_pc_next == 1'd1) begin
+                reg_w_op <= 1'b0;
+                reg_w_reg_idx <= 5'd0;
+                reg_w_reg_val <= 32'd0;
 
-            mem_w_op <= 1'b0;
-            mem_w_mem_addr <= 32'd0;
-            mem_w_mem_val <= 32'h0;
+                mem_w_op <= 1'b0;
+                mem_w_mem_addr <= 32'd0;
+                mem_w_mem_val <= 32'h0;
+
+                reg_pc_w_op <= 1'b0;
+                reg_pc_w_val <= 32'd0;
+            end
+            else begin
+                reg_w_op <= reg_w_op;
+                reg_w_reg_idx <= reg_w_reg_idx;
+                reg_w_reg_val <= reg_w_reg_val;
+
+                mem_w_op <= mem_w_op;
+                mem_w_mem_addr <= mem_w_mem_addr;
+                mem_w_mem_val <= mem_w_mem_val;
+
+                reg_pc_w_op <= reg_pc_w_op;
+                reg_pc_w_val <= reg_pc_w_val;
+            end
 
             st_done_exec_0 <= 1'd0;
             st_done_exec_1 <= 1'd0;
@@ -735,10 +761,10 @@ module CtlUnit(
             st_done_pc_next <= 1'd0;
         end
         else if (status == STATUS_PC_NEXT) begin 
-            if (ins_exec_reg_pc_w_op == 1'd1) begin
+            if (reg_pc_w_op == 1'd1) begin
                 pc_op <= 1'd1;
                 pc_pc_src <= 1'd1;
-                pc_alu_output <= ins_exec_reg_pc_w_val;
+                pc_alu_output <= reg_pc_w_val;
             end
             else begin
                 pc_op <= 1'd1;

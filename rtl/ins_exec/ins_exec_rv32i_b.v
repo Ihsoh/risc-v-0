@@ -34,7 +34,7 @@ module InsExec_RV32I_B(
                 // BEQ
                 if ($signed(reg_rs1_val) == $signed(reg_rs2_val)) begin
                     reg_pc_w_op <= 1'b1;
-                    reg_pc_w_val <= reg_pc_val + imm_ext_ext;
+                    reg_pc_w_val <= reg_pc_val + (imm_ext_ext << 1);
                 end
                 else begin
                     reg_pc_w_op <= 1'b0;
@@ -45,7 +45,7 @@ module InsExec_RV32I_B(
                 // BNE
                 if ($signed(reg_rs1_val) != $signed(reg_rs2_val)) begin
                     reg_pc_w_op <= 1'b1;
-                    reg_pc_w_val <= reg_pc_val + imm_ext_ext;
+                    reg_pc_w_val <= reg_pc_val + (imm_ext_ext << 1);
                 end
                 else begin
                     reg_pc_w_op <= 1'b0;
@@ -56,7 +56,7 @@ module InsExec_RV32I_B(
                 // BLT
                 if ($signed(reg_rs1_val) < $signed(reg_rs2_val)) begin
                     reg_pc_w_op <= 1'b1;
-                    reg_pc_w_val <= reg_pc_val + imm_ext_ext;
+                    reg_pc_w_val <= reg_pc_val + (imm_ext_ext << 1);
                 end
                 else begin
                     reg_pc_w_op <= 1'b0;
@@ -67,7 +67,7 @@ module InsExec_RV32I_B(
                 // BGE
                 if ($signed(reg_rs1_val) >= $signed(reg_rs2_val)) begin
                     reg_pc_w_op <= 1'b1;
-                    reg_pc_w_val <= reg_pc_val + imm_ext_ext;
+                    reg_pc_w_val <= reg_pc_val + (imm_ext_ext << 1);
                 end
                 else begin
                     reg_pc_w_op <= 1'b0;
@@ -78,7 +78,7 @@ module InsExec_RV32I_B(
                 // BLTU
                 if (reg_rs1_val < reg_rs2_val) begin
                     reg_pc_w_op <= 1'b1;
-                    reg_pc_w_val <= reg_pc_val + imm_ext_ext;
+                    reg_pc_w_val <= reg_pc_val + (imm_ext_ext << 1);
                 end
                 else begin
                     reg_pc_w_op <= 1'b0;
@@ -89,7 +89,7 @@ module InsExec_RV32I_B(
                 // BGEU
                 if (reg_rs1_val >= reg_rs2_val) begin
                     reg_pc_w_op <= 1'b1;
-                    reg_pc_w_val <= reg_pc_val + imm_ext_ext;
+                    reg_pc_w_val <= reg_pc_val + (imm_ext_ext << 1);
                 end
                 else begin
                     reg_pc_w_op <= 1'b0;

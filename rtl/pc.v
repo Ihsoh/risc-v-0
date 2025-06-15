@@ -35,8 +35,8 @@ module PC(
                     next_pc <= next_pc + 4;
                 end
                 1'b1: begin
-                    current_pc <= next_pc;
-                    next_pc <= alu_output;
+                    current_pc <= alu_output;
+                    next_pc <= alu_output + 4;
                 end
                 default: begin
                     current_pc <= current_pc;
