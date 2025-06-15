@@ -469,7 +469,7 @@ module CtlUnit(
                     || ins_dec_op == 7'b1110011) begin
                 // I-type
                 // rs1
-                union_reg_file_op_reg_r <= 0'd0;
+                union_reg_file_op_reg_r <= 0'd1;
                 union_reg_file_rw_reg_r <= 0'd0;
                 union_reg_file_reg_idx_reg_r <= ins_dec_rs1;
                 union_reg_file_data_w_reg_r <= 0'd0;
