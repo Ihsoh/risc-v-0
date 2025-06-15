@@ -88,6 +88,9 @@ module CtlUnit(
     wire [31:0]     ins_exec_mem_w_mem_addr;
     wire [31:0]     ins_exec_mem_w_mem_val;
 
+    wire            ins_exec_reg_pc_w_op;
+    wire [31:0]     ins_exec_reg_pc_w_val;
+
     // ========================================
     // 字段定义
     // ========================================
@@ -732,9 +735,16 @@ module CtlUnit(
             st_done_pc_next <= 1'd0;
         end
         else if (status == STATUS_PC_NEXT) begin 
-            pc_op <= 1'd1;
-            pc_pc_src <= 1'd0;
-            pc_alu_output <= 1'd0;
+            if (ins_exec_reg_pc_w_op == 1'd1) begin
+                pc_op <= 1'd1;
+                pc_pc_src <= 1'd1;
+                pc_alu_output <= ins_exec_reg_pc_w_val;
+            end
+            else begin
+                pc_op <= 1'd1;
+                pc_pc_src <= 1'd0;
+                pc_alu_output <= 1'd0;
+            end
 
             st_done_pc_next <= 1'd1;
         end
@@ -843,6 +853,8 @@ module CtlUnit(
         .reg_rs2(ins_dec_rs2),
         .reg_rs2_val(reg_r_rs2),
 
+        .reg_pc_val(pc_current_pc),
+
         .reg_rd(ins_dec_rd),
 
         .imm_ext_type(imm_ext_type),
@@ -857,7 +869,10 @@ module CtlUnit(
 
         .mem_w_op(ins_exec_mem_w_op),
         .mem_w_mem_addr(ins_exec_mem_w_mem_addr),
-        .mem_w_mem_val(ins_exec_mem_w_mem_val)
+        .mem_w_mem_val(ins_exec_mem_w_mem_val),
+
+        .reg_pc_w_op(ins_exec_reg_pc_w_op),
+        .reg_pc_w_val(ins_exec_reg_pc_w_val)
     );
 
 endmodule
