@@ -59,6 +59,15 @@ module InsExec(
     wire            rv32i_b_reg_pc_w_op;
     wire [31:0]     rv32i_b_reg_pc_w_val;
 
+    // InsExec_RV32I_J
+    wire            rv32i_j_reg_pc_w_op;
+    wire [31:0]     rv32i_j_reg_pc_w_val;
+
+    wire            rv32i_j_reg_w_op;
+    wire [4:0]      rv32i_j_reg_w_reg_idx;
+    wire [31:0]     rv32i_j_reg_w_reg_val;
+
+
     always @(negedge sys_clk) begin
         if (op == 1'b1
                 && ins_dec_op == 7'b0110011) begin
@@ -124,6 +133,19 @@ module InsExec(
 
             reg_pc_w_op <= rv32i_b_reg_pc_w_op;
             reg_pc_w_val <= rv32i_b_reg_pc_w_val;
+        end
+        else if (op == 1'b1
+                && ins_dec_op == 7'b1101111) begin
+            reg_w_op <= rv32i_j_reg_w_op;
+            reg_w_reg_idx <= rv32i_j_reg_w_reg_idx;
+            reg_w_reg_val <= rv32i_j_reg_w_reg_val;
+
+            mem_w_op <= 1'd0;
+            mem_w_mem_addr <= 32'd0;
+            mem_w_mem_val <= 32'd0;
+
+            reg_pc_w_op <= rv32i_j_reg_pc_w_op;
+            reg_pc_w_val <= rv32i_j_reg_pc_w_val;
         end
         else begin
             reg_w_op <= 1'd0;
@@ -224,6 +246,26 @@ module InsExec(
 
         .reg_pc_w_op(rv32i_b_reg_pc_w_op),
         .reg_pc_w_val(rv32i_b_reg_pc_w_val)
+    );
+
+    InsExec_RV32I_J u_ins_exec_rv32i_j(
+        .op(op),
+        
+        .ins_dec_op(ins_dec_op),
+
+        .reg_pc_val(reg_pc_val),
+
+        .reg_rd(reg_rd),
+
+        .imm_ext_type(imm_ext_type),
+        .imm_ext_ext(imm_ext_ext),
+
+        .reg_pc_w_op(rv32i_j_reg_pc_w_op),
+        .reg_pc_w_val(rv32i_j_reg_pc_w_val),
+
+        .reg_w_op(rv32i_j_reg_w_op),
+        .reg_w_reg_idx(rv32i_j_reg_w_reg_idx),
+        .reg_w_reg_val(rv32i_j_reg_w_reg_val)
     );
 
 endmodule
