@@ -545,9 +545,6 @@ module CtlUnit(
             union_reg_file_reg_idx_reg_r <= 0'd0;
             union_reg_file_data_w_reg_r <= 0'd0;
 
-            reg_r_rs1 <= 0'd0;
-            reg_r_rs2 <= 0'd0;
-
             st_done_reg_r_0 <= 1'd0;
             st_done_reg_r_0_a <= 1'd0;
             st_done_reg_r_0_b <= 1'd0;
