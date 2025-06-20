@@ -35,13 +35,6 @@ module InsExec_RV32I_I_JALR(
 
         or imm_ext_type
         or imm_ext_ext
-
-        or reg_pc_w_op
-        or reg_pc_w_val
-
-        or reg_w_op
-        or reg_w_reg_idx
-        or reg_w_reg_val
     ) begin
         if (op == 1'b1
                 && ins_dec_op == 7'b1100111
@@ -54,13 +47,8 @@ module InsExec_RV32I_I_JALR(
 
             // rd = PC + 4
             reg_w_op <= 1'b1;
-            reg_w_reg_idx <= reg_rd;    // TODO: 写寄存器的Index未能正确设置
+            reg_w_reg_idx <= reg_rd;
             reg_w_reg_val <= reg_pc_val + 4;
-
-            $display(
-                "reg_rd = %d",
-                reg_rd
-            );
         end
         else begin
             reg_pc_w_op <= 1'b0;

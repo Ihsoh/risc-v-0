@@ -29,13 +29,6 @@ module InsExec_RV32I_J(
 
         or imm_ext_type
         or imm_ext_ext
-        
-        or reg_pc_w_op
-        or reg_pc_w_val
-        
-        or reg_w_op
-        or reg_w_reg_idx
-        or reg_w_reg_val
     ) begin
         if (op == 1'b1
                 && ins_dec_op == 7'b1101111) begin

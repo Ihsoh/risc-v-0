@@ -21,10 +21,6 @@ module InsExec_RV32I_I_Ld(
         or ins_dec_funct3
 
         or reg_rd
-
-        or reg_w_op
-        or reg_w_reg_idx
-        or reg_w_reg_val
     ) begin
         if (op == 1'b1
                 && ins_dec_op == 7'b0000011) begin

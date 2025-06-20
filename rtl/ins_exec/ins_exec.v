@@ -7,15 +7,15 @@ module InsExec(
     input   wire [2:0]      ins_dec_funct3,
     input   wire [6:0]      ins_dec_funct7,
 
-    input   wire [5:0]      reg_rs1,
+    input   wire [4:0]      reg_rs1,
     input   wire [31:0]     reg_rs1_val,
     
-    input   wire [5:0]      reg_rs2,
+    input   wire [4:0]      reg_rs2,
     input   wire [31:0]     reg_rs2_val,
 
     input   wire [31:0]     reg_pc_val,
 
-    input   wire [5:0]      reg_rd,
+    input   wire [4:0]      reg_rd,
 
     input   wire            imm_ext_type,
     input   wire [31:0]     imm_ext_ext,
