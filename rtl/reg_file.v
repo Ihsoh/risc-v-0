@@ -63,13 +63,23 @@ module RegFile(
         end
     end
 
+    /*
+        处理读寄存器操作
+    */
     always @(negedge sys_clk) begin
         if (sys_rst) begin
             data_r <= 0;
         end
         else begin
             if (op == 1'd1 && rw == 1'd0) begin
-                data_r <= reg_file[reg_idx];
+                if (reg_idx == 5'd0) begin
+                    // 读取0号寄存器的值总是为0
+                    data_r <= 32'd0;
+                end
+                else begin
+                    // 读取除了0号寄存器以外的寄存器的值返回相应的值
+                    data_r <= reg_file[reg_idx];
+                end
             end
             else begin
                 data_r <= 32'd0;
@@ -77,13 +87,23 @@ module RegFile(
         end
     end
 
+    /*
+        处理写寄存器操作
+    */
     always @(negedge sys_clk) begin
         if (sys_rst) begin
             reg_file[reg_idx] <= reg_file[reg_idx];
         end
         else begin
             if (op == 1'd1 && rw == 1'd1) begin
-                reg_file[reg_idx] <= data_w;
+                if (reg_idx == 5'd0) begin
+                    // 写0号寄存器的值将被忽略
+                    reg_file[reg_idx] <= reg_file[reg_idx];
+                end
+                else begin
+                    // 写除了0号寄存器以外的寄存器的值将被写入
+                    reg_file[reg_idx] <= data_w;
+                end
             end
             else begin
                 reg_file[reg_idx] <= reg_file[reg_idx];
