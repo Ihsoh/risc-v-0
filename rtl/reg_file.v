@@ -61,31 +61,6 @@ module RegFile(
         for (i = 0; i < REG_COUNT; i = i + 1) begin
             reg_file[i] = 0;
         end
-
-
-        // TODO: TEST
-
-        reg_file[1] <= 32'd0;
-
-        reg_file[2] <= 32'd1;
-
-        reg_file[3] <= 32'd2;
-
-        // reg_file[0] <= 32'h0a0b0c0d;
-
-        // reg_file[1] <= 32'h1a1b1c1d;
-
-        // reg_file[2] <= 32'h2a2b2c2d;
-
-        // reg_file[3] <= 32'h3a3b3c3d;
-
-        // reg_file[4] <= 32'h4a4b4c4d;
-
-
-
-
-
-
     end
 
     always @(negedge sys_clk) begin
