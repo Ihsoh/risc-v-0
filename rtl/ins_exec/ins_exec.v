@@ -80,6 +80,10 @@ module InsExec(
     wire [4:0]      rv32i_u_reg_w_reg_idx;
     wire [31:0]     rv32i_u_reg_w_reg_val;
 
+    // InsExec_RV32I_I_ENV
+    wire            rv32i_i_env_reg_pc_w_op;
+    wire [31:0]     rv32i_i_env_reg_pc_w_val;
+
 
     always @(negedge sys_clk) begin
         if (op == 1'b1
@@ -185,6 +189,19 @@ module InsExec(
 
             reg_pc_w_op <= 1'd0;
             reg_pc_w_val <= 32'd0;
+        end
+        else if (op == 1'b1
+                && ins_dec_op == 7'b1110011) begin
+            reg_w_op <= 1'd0;
+            reg_w_reg_idx <= 5'd0;
+            reg_w_reg_val <= 32'd0;
+
+            mem_w_op <= 1'd0;
+            mem_w_mem_addr <= 32'd0;
+            mem_w_mem_val <= 32'd0;
+
+            reg_pc_w_op <= rv32i_i_env_reg_pc_w_op;
+            reg_pc_w_val <= rv32i_i_env_reg_pc_w_val;
         end
         else begin
             reg_w_op <= 1'd0;
