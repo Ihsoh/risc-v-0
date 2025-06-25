@@ -64,6 +64,13 @@ module CtlUnit(
     wire [MMU_DATA_WIDTH - 1:0]     mmu_data_w;
     wire [MMU_DATA_WIDTH - 1:0]     mmu_data_r;
 
+    // 外部模块
+    wire                            ext_op;
+    wire                            ext_rw;
+    wire [MMU_ADDR_WIDTH - 1:0]     ext_addr;
+    wire [MMU_DATA_WIDTH - 1:0]     ext_data_w;
+    wire [MMU_DATA_WIDTH - 1:0]     ext_data_r;
+
     // 指令解码
     wire [6:0]  ins_dec_op;
     wire [2:0]  ins_dec_funct3;
@@ -858,7 +865,28 @@ module CtlUnit(
             .rw(mmu_rw),
             .addr(mmu_addr),
             .data_w(mmu_data_w),
-            .data_r(mmu_data_r)
+            .data_r(mmu_data_r),
+            .ext_op(ext_op),
+            .ext_rw(ext_rw),
+            .ext_addr(ext_addr),
+            .ext_data_w(ext_data_w),
+            .ext_data_r(ext_data_r)
+        );
+
+    // 外部模块
+    ExtCtl
+        #(
+            .ADDR_WIDTH(MMU_ADDR_WIDTH),
+            .DATA_WIDTH(MMU_DATA_WIDTH)
+        )
+        u_ext_ctl(
+            .sys_clk(sys_clk),
+            .sys_rst(sys_rst),
+            .op(ext_op),
+            .rw(ext_rw),
+            .addr(ext_addr),
+            .data_w(ext_data_w),
+            .data_r(ext_data_r)
         );
 
     // 指令解码模块
