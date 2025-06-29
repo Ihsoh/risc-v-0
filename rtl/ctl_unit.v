@@ -3,7 +3,13 @@ module CtlUnit(
     input                   sys_clk,
     
     // 下降沿复位
-    input                   sys_rst
+    input                   sys_rst,
+
+    // GPIO输入
+    input wire [31:0]       gpio_in,
+
+    // GPIO输出
+    output wire [31:0]      gpio_out
 );
 
     // ========================================
@@ -123,6 +129,8 @@ module CtlUnit(
     reg             st_done_mem_r_1;
     reg             st_done_mem_r_1_a;
     reg             st_done_mem_r_1_b;
+    reg             st_done_mem_r_1_c;
+    reg             st_done_mem_r_1_d;
     reg             st_done_mem_r;
 
     reg             st_done_exec_0;
@@ -222,6 +230,8 @@ module CtlUnit(
         st_done_mem_r_1 <= 1'd0;
         st_done_mem_r_1_a <= 1'd0;
         st_done_mem_r_1_b <= 1'd0;
+        st_done_mem_r_1_c <= 1'd0;
+        st_done_mem_r_1_d <= 1'd0;
         st_done_mem_r <= 1'd0;
         
         st_done_exec_0 <= 1'd0;
@@ -501,7 +511,6 @@ module CtlUnit(
                     union_reg_file_data_w_reg_r <= 0'd0;
 
                     reg_r_rs1 <= reg_file_data_r;
-                    reg_r_rs2 <= 32'd0;
 
                     st_done_reg_r_0_a <= 1'b1;
                     st_done_reg_r_0_b <= st_done_reg_r_0_a;
@@ -515,7 +524,6 @@ module CtlUnit(
                     union_reg_file_reg_idx_reg_r <= ins_dec_rs2;
                     union_reg_file_data_w_reg_r <= 0'd0;
 
-                    reg_r_rs1 <= 32'd0;
                     reg_r_rs2 <= reg_file_data_r;
                     
                     st_done_reg_r_1_a <= 1'b1;
@@ -527,9 +535,6 @@ module CtlUnit(
                     union_reg_file_rw_reg_r <= 0'd0;
                     union_reg_file_reg_idx_reg_r <= 0'd0;
                     union_reg_file_data_w_reg_r <= 0'd0;
-
-                    reg_r_rs1 <= 0'd0;
-                    reg_r_rs2 <= 0'd0;
 
                     st_done_reg_r <= 1'd1;
                 end
@@ -578,6 +583,8 @@ module CtlUnit(
             st_done_mem_r_1 <= 1'd0;
             st_done_mem_r_1_a <= 1'd0;
             st_done_mem_r_1_b <= 1'd0;
+            st_done_mem_r_1_c <= 1'd0;
+            st_done_mem_r_1_d <= 1'd0;
             st_done_mem_r <= 1'd0;
         end
         else if (status == STATUS_MEM_R) begin 
@@ -599,7 +606,9 @@ module CtlUnit(
                     
                     st_done_mem_r_1_a <= 1'b1;
                     st_done_mem_r_1_b <= st_done_mem_r_1_a;
-                    st_done_mem_r_1 <= st_done_mem_r_1_b;
+                    st_done_mem_r_1_c <= st_done_mem_r_1_b;
+                    st_done_mem_r_1_d <= st_done_mem_r_1_c;
+                    st_done_mem_r_1 <= st_done_mem_r_1_d;
                 end
                 else begin
                     st_done_mem_r <= 1'd1;
@@ -619,6 +628,8 @@ module CtlUnit(
             st_done_mem_r_1 <= 1'd0;
             st_done_mem_r_1_a <= 1'd0;
             st_done_mem_r_1_b <= 1'd0;
+            st_done_mem_r_1_c <= 1'd0;
+            st_done_mem_r_1_d <= 1'd0;
             st_done_mem_r <= 1'd0;
         end
     end
@@ -886,7 +897,9 @@ module CtlUnit(
             .rw(ext_rw),
             .addr(ext_addr),
             .data_w(ext_data_w),
-            .data_r(ext_data_r)
+            .data_r(ext_data_r),
+            .gpio_in(gpio_in),
+            .gpio_out(gpio_out)
         );
 
     // 指令解码模块
